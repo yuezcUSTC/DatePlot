@@ -1,10 +1,12 @@
 @echo off
 
+REM 两个可选参数：绘图数和间隔时间（ms），若不设置按默认值
 set maxN=%1
 set dltT=%2
 if "%maxN%"=="" (set maxN=10)
 if "%dltT%"=="" (set dltT=500)
 
+REM 生成gnuplot绘图文件，可按需修改
 echo. > "plot.gp"
 echo set title 'T(x,y)' >> "plot.gp"
 echo set xlabel 'X' >> "plot.gp"
@@ -14,8 +16,10 @@ echo splot "temp.txt" >> "plot.gp"
 REM echo plot "temp.txt" with image >> "plot.gp"
 echo reread >> "plot.gp"
 
+REM 以并行方式启动绘图（reread使图实时更新）
 start /B plot.gp
 
+REM 以固定间隔依次复制文件夹中的文件到绘图临时文件
 echo maxN=%maxN%, dltT=%dltT%ms
 set /a i=0
 :loop
@@ -30,6 +34,7 @@ goto loop
 )
 :end
 
+REM 删除绘图文件最后一行（即reread），避免死循环
 setlocal enabledelayedexpansion
 for /f "delims=" %%i in ('type "plot.gp"') do (
 set /a n+=1
@@ -38,6 +43,7 @@ set /a n-=1
 (for /l %%i in ('1,1,!n!') do (
 echo=!m%%i!))>"plot.gp"
 
+REM 子函数，用于获得毫秒级时间间隔
 :delay
 echo WScript.Sleep %1>delay.vbs
 cscript  //b delay.vbs
