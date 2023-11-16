@@ -12,8 +12,11 @@ echo set title 'T(x,y)' >> "plot.gp"
 echo set xlabel 'X' >> "plot.gp"
 echo set ylabel 'Y' >> "plot.gp"
 echo set zlabel 'T' >> "plot.gp"
-echo splot "temp.txt" >> "plot.gp"
-REM echo plot "temp.txt" with image >> "plot.gp"
+echo set view 45,135 >> "plot.gp" REM 设置视角
+REM echo splot "temp.txt" >> "plot.gp" REM 绘制点图
+echo splot "temp.txt" with surface >> "plot.gp" REM 绘制网格面图
+REM echo splot "temp.txt" with pm3d >> "plot.gp" REM 绘制颜色面图
+REM echo plot "temp.txt" with image >> "plot.gp" REM 其他数据格式绘制image
 echo reread >> "plot.gp"
 
 REM 以并行方式启动绘图（reread使图实时更新）
